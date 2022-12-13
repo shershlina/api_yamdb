@@ -40,3 +40,6 @@ class GenresTitle(models.Model):
 
     def __str__(self):
         return self.genre
+=======
+# Create your models here.
+>>>>>>> 7b5cee2 (+)
