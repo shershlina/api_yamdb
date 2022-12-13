@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'reviews',
+    'authentication',
+
 ]
 
 MIDDLEWARE = [
@@ -69,7 +71,7 @@ DATABASES = {
     }
 }
 
-
+AUTH_USER_MODEL = 'authentication.User'
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -106,3 +108,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'apps.authentication.backends.JWTAuthentication',
+    ),
+}
+
