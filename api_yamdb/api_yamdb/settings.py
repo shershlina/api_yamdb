@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django_filters',
     'api',
     'reviews',
-    'authentication'
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +71,6 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'authentication.User'
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -109,6 +108,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -117,3 +117,4 @@ REST_FRAMEWORK = {
         'authentication.backends.JWTAuthentication',
     )
 }
+AUTH_USER_MODEL = 'authentication.User'
