@@ -115,7 +115,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'authentication.backends.JWTAuthentication',
-
     )
 }
 AUTH_USER_MODEL = 'authentication.User'
