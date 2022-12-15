@@ -1,6 +1,6 @@
 from django.db import models
-
 from authentication.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Category(models.Model):
@@ -48,10 +48,14 @@ class Review(models.Model):
     text = models.TextField()
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='reviews')
-    score = models.IntegerField()
+    score = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(10)])
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
     title = models.ForeignKey(
         Title, on_delete=models.CASCADE, related_name='reviews')
+
+    class Meta:
+        unique_together = ('title', 'author',)
 
 
 class Comment(models.Model):
