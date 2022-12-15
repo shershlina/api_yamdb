@@ -41,6 +41,14 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
 
+    def validate_author(self, value):
+        if self.context['request'].user.reviews.filter(
+            title=self.context.get('view').kwargs.get('title_id')
+        ).exists():
+            raise serializers.ValidationError(
+                'Нельзя оставлять несколько отзывов на одно произведение.')
+        return value
+
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
