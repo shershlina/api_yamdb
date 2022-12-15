@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -27,6 +28,7 @@ INSTALLED_APPS = [
     'api',
     'reviews',
     'authentication',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -113,7 +115,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'authentication.backends.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 AUTH_USER_MODEL = 'authentication.User'
+
+SIMPLE_JWT = {'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+              'AUTH_HEADER_TYPES': ('Bearer',)}
