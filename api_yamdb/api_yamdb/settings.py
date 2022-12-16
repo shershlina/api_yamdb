@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'reviews',
     'authentication',
     'rest_framework_simplejwt',
+    'import_export',
 ]
 
 MIDDLEWARE = [
