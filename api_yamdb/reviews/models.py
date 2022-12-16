@@ -37,11 +37,8 @@ class Title(models.Model):
 
 
 class GenresTitle(models.Model):
-    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True)
-    title = models.ForeignKey(Title, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.genre
+    genre_id = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    title_id = models.ForeignKey(Title, on_delete=models.CASCADE)
 
 
 class Review(models.Model):
