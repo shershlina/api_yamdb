@@ -44,13 +44,13 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
 
-    def validate_text(self, value):
+    def validate(self, attrs):
         if self.context['request'].user.reviews.filter(
             title=self.context.get('view').kwargs.get('title_id')
-        ).exists():
+        ).exists() and self.context['request'].method == 'POST':
             raise serializers.ValidationError(
                 'Нельзя оставлять несколько отзывов на одно произведение.')
-        return value
+        return attrs
 
 
 class CommentSerializer(serializers.ModelSerializer):
