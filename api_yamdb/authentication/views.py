@@ -7,7 +7,7 @@ from rest_framework.viewsets import  ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import action
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, RegistrationSerializer
 from .send_mail import send_email
 from .generate_code import generate_code
 
@@ -15,7 +15,7 @@ from .generate_code import generate_code
 class RegisterView(ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = RegistrationSerializer
 
     def perform_create(self, serializer):
         email = self.request.data.get('email')
