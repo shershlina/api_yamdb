@@ -12,20 +12,24 @@ from .send_mail import send_email
 from .generate_code import generate_code
 
 
-class RegisterView(APIView):
-    permission_classes = (AllowAny,)
 
-    def post(self, request):
-        email = request.data.get('email')
+class RegisterView(ModelViewSet):
+    permission_classes = (AllowAny,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+'''
+    def perform_create(self, serializer):
+        email = self.request.data.get('email')
+        print(self.request.data.get('username'))
         user = User.objects.filter(email=email)
         confirmation_code = generate_code()
         data = {'email': email, 'confirmation_code': confirmation_code,
                 'username': f'{user}'}
-        serializer = UserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         #send_email(email, confirmation_code)
-        return Response({'email': email})
+        return Response({'email': email})'''
 
 
 class TokenView(APIView):

@@ -25,5 +25,5 @@ class User(AbstractUser):
         choices=UserRole.choices,
         default=UserRole.USER,
     )
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('username',)
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ('email',)
