@@ -24,7 +24,7 @@ class RegisterView(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user = User.objects.get(username=username)
-        confirmation_code = str(SlidingToken.for_user(user))
+        confirmation_code = generate_code()
         send_email(email, confirmation_code)
 
 
