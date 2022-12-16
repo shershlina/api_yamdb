@@ -17,6 +17,12 @@ class RegisterView(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = RegistrationSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def perform_create(self, serializer):
         email = self.request.data.get('email')
         confirmation_code = generate_code()
