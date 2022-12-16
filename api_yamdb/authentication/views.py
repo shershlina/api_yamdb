@@ -22,13 +22,13 @@ class RegisterView(APIView):
         email = request.data.get('email')
         confirmation_code = generate_code()
         user = User.objects.filter(
-            username=self.request.data.get('username'),
-            email=self.request.data.get('email')).exists()
+            username=username,
+            email=email).exists()
         if (username and email and user):
             confirmation_code = generate_code()
             ur = User.objects.get(
-                username=self.request.data.get('username'),
-                email=self.request.data.get('email'))
+                username=username,
+                email=email)
             serializer = RegistrationSerializer(data=request.data, instance=ur)
             serializer.instance.confirmation_code = confirmation_code
             serializer.is_valid(raise_exception=True)
