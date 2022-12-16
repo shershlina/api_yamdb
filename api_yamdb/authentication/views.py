@@ -25,7 +25,6 @@ class RegisterView(APIView):
             username=username,
             email=email).exists()
         if (username and email and user):
-            confirmation_code = generate_code()
             ur = User.objects.get(
                 username=username,
                 email=email)
