@@ -15,6 +15,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(max_length=254, unique=True)
     bio = models.TextField(max_length=500, blank=True, null=True)
+
     confirmation_code = models.CharField(max_length=100, null=True,
                                          verbose_name='Код подтверждения',
                                          default=generate_code())

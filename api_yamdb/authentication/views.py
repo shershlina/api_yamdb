@@ -59,3 +59,4 @@ class UsersViewSet(ModelViewSet):
         else:
             serializer = self.get_serializer(request.user, many=False)
             return Response(serializer.data)
+
