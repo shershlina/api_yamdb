@@ -24,6 +24,7 @@ class CategoryViewSet(CLDMixinSet):
     permission_classes = (AdminPermission,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    lookup_field = 'slug'
 
 
 class GenreViewSet(CLDMixinSet):
@@ -32,6 +33,7 @@ class GenreViewSet(CLDMixinSet):
     permission_classes = (AdminPermission,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):
