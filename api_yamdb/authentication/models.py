@@ -23,7 +23,7 @@ class User(AbstractUser):
         max_length=10,
         help_text='роль пользователя в системе',
         choices=UserRole.choices,
-        default=UserRole.USER,
+        default=UserRole.USER
     )
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ('email',)
