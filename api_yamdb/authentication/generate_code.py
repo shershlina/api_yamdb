@@ -1,2 +1,11 @@
+import random
+import string
+
+
 def generate_code():
-    return '123456789'
+    alphabet = (string.ascii_lowercase
+                + string.ascii_uppercase
+                + string.digits
+                + string.punctuation)
+    temp = random.sample(alphabet, 20)
+    return ''.join(temp)
