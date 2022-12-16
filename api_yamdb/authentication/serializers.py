@@ -11,7 +11,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         pattern = re.compile(r"^[\w.@+-]+\Z")
-        if pattern.match(value):
+        if pattern.match(value) and value != 'me':
             return value
         raise serializers.ValidationError(
                 "username должно соответствовать паттерну по документации")
@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     def validate_username(self, value):
         pattern = re.compile(r"^[\w.@+-]+\Z")
-        if pattern.match(value):
+        if pattern.match(value) and value != 'me':
             return value
         raise serializers.ValidationError(
                 "username должно соответствовать паттерну по документации")

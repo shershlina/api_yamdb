@@ -39,7 +39,11 @@ class TokenView(APIView):
         return str(refresh.access_token)
 
     def post(self, request):
-        user = get_object_or_404(User, email=request.data.get('email'))
+        if not request.data.get('confirmation_code') or not request.data.get('username'):
+            response = {'confirmation_code': 'Обязательное поле', 'username': 'Обязательное поле'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(User, username=request.data.get('username'))
         if user.confirmation_code != request.data.get('confirmation_code'):
             response = {'confirmation_code': 'Неверный код'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
