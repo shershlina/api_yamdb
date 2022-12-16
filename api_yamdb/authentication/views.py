@@ -10,7 +10,6 @@ from .models import User
 from .serializers import UserSerializer
 from .send_mail import send_email
 from .generate_code import generate_code
-from rest_framework_simplejwt.tokens import RefreshToken, SlidingToken, UntypedToken
 
 
 class RegisterView(ModelViewSet):
@@ -20,11 +19,9 @@ class RegisterView(ModelViewSet):
 
     def perform_create(self, serializer):
         email = self.request.data.get('email')
-        username = self.request.data.get('username')
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        user = User.objects.get(username=username)
         confirmation_code = generate_code()
+        serializer.is_valid(raise_exception=True)
+        serializer.save(confirmation_code=confirmation_code)
         send_email(email, confirmation_code)
 
 
