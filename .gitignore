@@ -109,6 +109,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+sent_emails/
+/sent_emails
 
 # Spyder project settings
 .spyderproject
