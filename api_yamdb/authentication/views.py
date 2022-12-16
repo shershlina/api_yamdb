@@ -3,7 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (AllowAny, IsAuthenticated)
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import  ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import action
 from .models import User
@@ -12,23 +12,34 @@ from .send_mail import send_email
 from .generate_code import generate_code
 
 
-class RegisterView(ModelViewSet):
+class RegisterView(APIView):
     permission_classes = (AllowAny,)
     queryset = User.objects.all()
     serializer_class = RegistrationSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def perform_create(self, serializer):
-        email = self.request.data.get('email')
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        email = request.data.get('email')
         confirmation_code = generate_code()
+        user = User.objects.filter(
+            username=self.request.data.get('username'),
+            email=self.request.data.get('email')).exists()
+        if (username and email and user):
+            confirmation_code = generate_code()
+            ur = User.objects.get(
+                username=self.request.data.get('username'),
+                email=self.request.data.get('email'))
+            serializer = RegistrationSerializer(data=request.data, instance=ur)
+            serializer.instance.confirmation_code = confirmation_code
+            serializer.is_valid(raise_exception=True)
+            serializer.save(confirmation_code=confirmation_code)
+            send_email(email, confirmation_code)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = RegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(confirmation_code=confirmation_code)
         send_email(email, confirmation_code)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TokenView(APIView):
@@ -39,8 +50,12 @@ class TokenView(APIView):
         return str(refresh.access_token)
 
     def post(self, request):
-        if not request.data.get('confirmation_code') or not request.data.get('username'):
-            response = {'confirmation_code': 'Обязательное поле', 'username': 'Обязательное поле'}
+        if (
+            not request.data.get('confirmation_code')
+            or not request.data.get('username')
+        ):
+            response = {'confirmation_code': 'Обязательное поле',
+                        'username': 'Обязательное поле'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(User, username=request.data.get('username'))
