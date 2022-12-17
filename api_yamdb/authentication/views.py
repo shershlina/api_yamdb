@@ -1,15 +1,16 @@
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import (AllowAny, IsAuthenticated)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import action
-from .models import User
-from .serializers import UserSerializer, RegistrationSerializer
-from .send_mail import send_email
+
 from .generate_code import generate_code
+from .models import User
+from .send_mail import send_email
+from .serializers import UserSerializer, RegistrationSerializer
 
 
 class RegisterView(APIView):
