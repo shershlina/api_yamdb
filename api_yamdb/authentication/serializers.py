@@ -25,6 +25,10 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'role', 'bio', 'email',
                   'first_name', 'last_name',)
+        lookup_field = 'username'
+        extra_kwargs = {
+            'url': {'lookup_field': 'username'}
+        }
     
     def validate_username(self, value):
         pattern = re.compile(r"^[\w.@+-]+\Z")
