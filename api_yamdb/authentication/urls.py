@@ -1,16 +1,11 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import UsersViewSet, RegisterView, TokenView
-
-router = DefaultRouter()
-router.register(r'users', UsersViewSet, basename='users')
-
+from .views import RegisterView, TokenView
 
 app_name = 'authentication'
 
 urlpatterns = [
     path('auth/token/', TokenView.as_view(), name='get_token'),
     path('auth/signup/', RegisterView.as_view(), name='create_user'),
-    path('', include(router.urls)),
+
 ]
