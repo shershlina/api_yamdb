@@ -75,6 +75,7 @@ class UsersViewSet(ModelViewSet):
     pagination_class = LimitOffsetPagination
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
+    lookup_field = 'username'
 
     @action(detail=False, permission_classes=(IsAuthenticated,),
             methods=['get', 'patch'], url_path='me')
