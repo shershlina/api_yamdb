@@ -15,7 +15,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if pattern.match(value) and value != 'me':
             return value
         raise serializers.ValidationError(
-                "username должно соответствовать паттерну по документации")
+            "username должно соответствовать паттерну по документации")
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,10 +29,15 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'username'}
         }
-    
+
     def validate_username(self, value):
         pattern = re.compile(r"^[\w.@+-]+\Z")
         if pattern.match(value) and value != 'me':
             return value
         raise serializers.ValidationError(
-                "username должно соответствовать паттерну по документации")
+            "username должно соответствовать паттерну по документации")
+
+    def validate_role(self, value):
+        if self.context['request'].path == '/api/v1/users/me/':
+            return self.instance.role
+        return value
