@@ -26,8 +26,27 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class TitleSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
-    genres = GenreSerializer(read_only=True, many=True)
+    genre = GenreSerializer(read_only=True, many=True)
     rating = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Title
+        fields = '__all__'
+
+    def get_rating(self, obj):
+        return obj.reviews.aggregate(Avg("score"))["score__avg"]
+
+
+class TitleEditSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),
+        slug_field='slug'
+    )
+    genre = serializers.SlugRelatedField(
+        queryset=Genre.objects.all(),
+        slug_field='slug',
+        many=True
+    )
 
     class Meta:
         model = Title
@@ -38,9 +57,6 @@ class TitleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Нельзя публиковать ещё не вышедшее произведение')
         return value
-
-    def get_rating(self, obj):
-        return obj.reviews.aggregate(Avg("score"))["score__avg"]
 
 
 class ReviewSerializer(serializers.ModelSerializer):
