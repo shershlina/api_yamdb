@@ -76,6 +76,7 @@ class UsersViewSet(ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
     lookup_field = 'username'
+    http_method_names = ["patch", "get", "post", "delete"]
 
     @action(detail=False, permission_classes=(IsAuthenticated,),
             methods=['get', 'patch'], url_path='me')
