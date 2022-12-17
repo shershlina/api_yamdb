@@ -40,4 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_role(self, value):
         if self.context['request'].path == '/api/v1/users/me/':
             return self.instance.role
+        if value not in UserRole:
+            raise serializers.ValidationError(
+            "передана несуществующая роль")
         return value
