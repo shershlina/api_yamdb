@@ -11,11 +11,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ('username', 'email',)
 
     def validate_username(self, value):
-        pattern = re.compile(r"^[\w.@+-]+\Z")
+        pattern = re.compile(r'^[\w.@+-]+\Z')
         if pattern.match(value) and value != 'me':
             return value
         raise serializers.ValidationError(
-            "username должно соответствовать паттерну по документации")
+            'username должно соответствовать паттерну по документации')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -35,12 +35,12 @@ class UserSerializer(serializers.ModelSerializer):
         if pattern.match(value) and value != 'me':
             return value
         raise serializers.ValidationError(
-            "username должно соответствовать паттерну по документации")
+            'username должно соответствовать паттерну по документации')
 
     def validate_role(self, value):
         if self.context['request'].path == '/api/v1/users/me/':
             return self.instance.role
         if value not in UserRole:
             raise serializers.ValidationError(
-            "передана несуществующая роль")
+                'передана несуществующая роль')
         return value

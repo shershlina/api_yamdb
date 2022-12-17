@@ -6,7 +6,6 @@ from .generate_code import generate_code
 
 class UserRole(models.TextChoices):
     """Роли пользователей."""
-
     USER = 'user'
     MODERATOR = 'moderator'
     ADMIN = 'admin'

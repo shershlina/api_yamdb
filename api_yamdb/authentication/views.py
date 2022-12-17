@@ -27,7 +27,7 @@ class RegisterView(APIView):
         user = User.objects.filter(
             username=username,
             email=email).exists()
-        if (username and email and user):
+        if username and email and user:
             ur = User.objects.get(
                 username=username,
                 email=email)
@@ -59,7 +59,6 @@ class TokenView(APIView):
             response = {'confirmation_code': 'Обязательное поле',
                         'username': 'Обязательное поле'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
         user = get_object_or_404(User, username=request.data.get('username'))
         if user.confirmation_code != request.data.get('confirmation_code'):
             response = {'confirmation_code': 'Неверный код'}
@@ -87,6 +86,5 @@ class UsersViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
-        else:
-            serializer = self.get_serializer(request.user, many=False)
-            return Response(serializer.data)
+        serializer = self.get_serializer(request.user, many=False)
+        return Response(serializer.data)
