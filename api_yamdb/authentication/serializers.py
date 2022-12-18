@@ -12,7 +12,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         pattern = re.compile(r'^[\w.@+-]+\Z')
-        if pattern.match(value) and value != 'me':
+        if value != 'me' and pattern.match(value):
             return value
         raise serializers.ValidationError(
             'username должно соответствовать паттерну по документации')
@@ -23,8 +23,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'role', 'bio', 'email',
-                  'first_name', 'last_name',)
+        exclude = ('id', 'password', 'last_login', 'is_superuser',
+                   'is_staff', 'is_active', 'date_joined', 'confirmation_code',
+                   'groups', 'user_permissions')
         lookup_field = 'username'
         extra_kwargs = {
             'url': {'lookup_field': 'username'}
@@ -32,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         pattern = re.compile(r"^[\w.@+-]+\Z")
-        if pattern.match(value) and value != 'me':
+        if value != 'me' and pattern.match(value):
             return value
         raise serializers.ValidationError(
             'username должно соответствовать паттерну по документации')
