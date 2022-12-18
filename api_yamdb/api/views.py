@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import (LimitOffsetPagination,
@@ -43,7 +44,8 @@ class GenreViewSet(CLDMixinSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')).order_by('name')
     pagination_class = PageNumberPagination
     permission_classes = (AdminOnly | ReadOnly,)
     filter_backends = (DjangoFilterBackend,)

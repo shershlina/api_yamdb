@@ -1,6 +1,5 @@
 import datetime as dt
 
-from django.db.models import Avg
 from rest_framework import serializers
 
 from reviews.models import Category, Genre, Title, Review, Comment
@@ -29,14 +28,12 @@ class GenreSerializer(serializers.ModelSerializer):
 class TitleSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(read_only=True, many=True)
-    rating = serializers.SerializerMethodField()
+    rating = serializers.IntegerField()
 
     class Meta:
         model = Title
         fields = '__all__'
-
-    def get_rating(self, obj):
-        return obj.reviews.aggregate(Avg("score"))["score__avg"]
+        read_only_fields = ('rating',)
 
 
 class TitleEditSerializer(serializers.ModelSerializer):
@@ -68,14 +65,15 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ('id', 'text', 'author', 'score', 'pub_date')
+        exclude = ('title',)
 
     def validate(self, attrs):
-        if self.context['request'].user.reviews.filter(
-            title=self.context.get('view').kwargs.get('title_id')
-        ).exists() and self.context['request'].method == 'POST':
-            raise serializers.ValidationError(
-                'Нельзя оставлять несколько отзывов на одно произведение.')
+        if self.context['request'].method == 'POST':
+            if self.context['request'].user.reviews.filter(
+                title=self.context.get(
+                    'view').kwargs.get('title_id')).exists():
+                raise serializers.ValidationError(
+                    'Нельзя оставлять несколько отзывов на одно произведение.')
         return attrs
 
 
@@ -86,4 +84,4 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'text', 'author', 'pub_date')
+        exclude = ('review',)
