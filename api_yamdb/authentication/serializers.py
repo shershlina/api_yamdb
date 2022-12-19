@@ -12,7 +12,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(default=UserRole.USER)
+    role = serializers.ChoiceField(default=UserRole.USER, choices=UserRole)
 
     class Meta:
         model = User
@@ -23,11 +23,3 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'username'}
         }
-
-    def validate_role(self, value):
-        if self.context['request'].path == '/api/v1/users/me/':
-            return self.instance.role
-        if value not in UserRole:
-            raise serializers.ValidationError(
-                'передана несуществующая роль')
-        return value
