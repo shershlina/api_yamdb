@@ -11,7 +11,7 @@ from .permissions import (AuthorOnly,
                           ReadOnly, AdminOnly, ModeratorOnly)
 from .serializers import (CategorySerializer,
                           GenreSerializer,
-                          TitleSerializer, TitleEditSerializer,
+                          TitleReadSerializer, TitleWriteSerializer,
                           ReviewSerializer,
                           CommentSerializer)
 
@@ -53,8 +53,8 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PATCH']:
-            return TitleEditSerializer
-        return TitleSerializer
+            return TitleWriteSerializer
+        return TitleReadSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
