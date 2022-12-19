@@ -77,7 +77,7 @@ class UsersViewSet(ModelViewSet):
             serializer = self.get_serializer(
                 instance=request.user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(role=serializer.instance.role)
             return Response(serializer.data)
         serializer = self.get_serializer(request.user, many=False)
         return Response(serializer.data)
