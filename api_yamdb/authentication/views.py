@@ -7,8 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from .generate_code import generate_code
+from django.contrib.auth.tokens import default_token_generator
 from .models import User
 from .permissions import AdminPermission
 from .send_mail import send_email
@@ -21,26 +20,18 @@ class RegisterView(APIView):
     serializer_class = RegistrationSerializer
 
     def post(self, request, *args, **kwargs):
+        serializer = RegistrationSerializer(data=request.data)
         username = request.data.get('username')
         email = request.data.get('email')
-        confirmation_code = generate_code()
-        user = User.objects.filter(
+        ur = User.objects.filter(
             username=username,
-            email=email).exists()
-        if username and email and user:
-            ur = User.objects.get(
-                username=username,
-                email=email)
-            serializer = RegistrationSerializer(data=request.data, instance=ur)
-            serializer.instance.confirmation_code = confirmation_code
-            serializer.is_valid(raise_exception=True)
-            serializer.save(confirmation_code=confirmation_code)
-            send_email(email, confirmation_code)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        serializer = RegistrationSerializer(data=request.data)
+            email=email)
+        if ur.exists():
+            serializer.instance = ur[0]
         serializer.is_valid(raise_exception=True)
-        serializer.save(confirmation_code=confirmation_code)
-        send_email(email, confirmation_code)
+        serializer.save()
+        send_email(email, default_token_generator.make_token(ur[0]
+                   or User.objects.get(username=username)))
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -60,11 +51,13 @@ class TokenView(APIView):
                         'username': 'Обязательное поле'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
         user = get_object_or_404(User, username=request.data.get('username'))
-        if user.confirmation_code != request.data.get('confirmation_code'):
-            response = {'confirmation_code': 'Неверный код'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        response = {'token': self.get_token(user)}
-        return Response(response, status=status.HTTP_200_OK)
+        if (
+            default_token_generator.check_token(
+                user, request.data.get('confirmation_code'))):
+            response = {'token': self.get_token(user)}
+            return Response(response, status=status.HTTP_200_OK)
+        response = {'confirmation_code': 'Неверный код'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UsersViewSet(ModelViewSet):
