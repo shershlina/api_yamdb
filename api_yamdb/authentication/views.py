@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.tokens import default_token_generator
 from .models import User
 from .permissions import AdminPermission
-from .send_mail import send_email
+from .utils import send_email
 from .serializers import UserSerializer, RegistrationSerializer
 
 
