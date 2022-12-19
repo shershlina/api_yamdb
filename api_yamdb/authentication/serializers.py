@@ -1,4 +1,3 @@
-import re
 
 from rest_framework import serializers
 
@@ -6,16 +5,10 @@ from .models import User, UserRole
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = ('username', 'email',)
-
-    def validate_username(self, value):
-        pattern = re.compile(r'^[\w.@+-]+\Z')
-        if value != 'me' and pattern.match(value):
-            return value
-        raise serializers.ValidationError(
-            'username должно соответствовать паттерну по документации')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,13 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'username'}
         }
-
-    def validate_username(self, value):
-        pattern = re.compile(r"^[\w.@+-]+\Z")
-        if value != 'me' and pattern.match(value):
-            return value
-        raise serializers.ValidationError(
-            'username должно соответствовать паттерну по документации')
 
     def validate_role(self, value):
         if self.context['request'].path == '/api/v1/users/me/':
