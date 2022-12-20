@@ -1,6 +1,7 @@
 from csv import DictReader
 from django.core.management import BaseCommand
 
+from authentication.models import User
 from reviews.models import Category, Genre, Title, Review, Comment
 
 ALREADY_LOADED_ERROR_MESSAGE = """
@@ -14,7 +15,8 @@ CSV_DIRS = {
     'genre': 'static/data/genre.csv',
     'title': 'static/data/title.csv',
     'review': 'static/data/review.csv',
-    'comment': 'static/data/comment.csv'
+    'comment': 'static/data/comment.csv',
+    'users': 'static/data/users.csv'
 }
 
 
@@ -28,14 +30,9 @@ class Command(BaseCommand):
             print(ALREADY_LOADED_ERROR_MESSAGE)
             return
         print('Loading categories data')
-        reader = DictReader(open(CSV_DIRS['category'], encoding='utf-8'))
-        fieldnames = reader.fieldnames
-        fields = []
-        for field in fieldnames:
-            fields.append(f'{field}=row["{field}"]')
-        rows = ', '.join(fields)
-        category = Category(exec(rows))
-        category.save()
+        for row in DictReader(open(CSV_DIRS['category'], encoding='utf-8')):
+            category = Category(name=row['name'], slug=row['slug'])
+            category.save()
 
         if Genre.objects.exists():
             print('Genre data already loaded, exiting.')
@@ -56,3 +53,36 @@ class Command(BaseCommand):
                           year=row['year'],
                           category=row['category'])
             title.save()
+
+        if Review.objects.exists():
+            print('Review data already loaded, exiting.')
+            print(ALREADY_LOADED_ERROR_MESSAGE)
+            return
+        print('Loading reviews data')
+        for row in DictReader(open(CSV_DIRS['review'], encoding='utf-8')):
+            review = Review(title_id=row['title_id'], text=row['text'],
+                            author=row['author'], score=row['score'],
+                            pub_date=row['pub_date'])
+            review.save()
+
+        if Comment.objects.exists():
+            print('Comment data already loaded, exiting.')
+            print(ALREADY_LOADED_ERROR_MESSAGE)
+            return
+        print('Loading comments data')
+        for row in DictReader(open(CSV_DIRS['comment'], encoding='utf-8')):
+            comment = Comment(review_id=row['review_id'], text=row['text'],
+                              author=row['author'], pub_date=row['pub_date'])
+            comment.save()
+
+        if User.objects.exists():
+            print('User data already loaded, exiting.')
+            print(ALREADY_LOADED_ERROR_MESSAGE)
+            return
+        print('Loading users data')
+        for row in DictReader(open(CSV_DIRS['users'], encoding='utf-8')):
+            user = User(username=row['username'], email=row['email'],
+                        role=row['role'], bio=row['bio'],
+                        first_name=row['first_name'],
+                        last_name=row['last_name'])
+            user.save()
