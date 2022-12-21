@@ -8,20 +8,17 @@ Clone the repository and open it through terminal.
 In some cases you need to use "python" instead of "python3".
 
 Create and activate virtual environment:
-
-```
-python3 -m venv env
-```
-
 * If you have Linux/macOS
 
     ```
+    python3 -m venv env 
     source env/bin/activate
     ```
 
 * If you have windows
 
     ```
+    python3 -m venv venv
     source venv/scripts/activate
     ```
 
@@ -44,7 +41,6 @@ cd ./api_yamdb/
 Make migrations:
 
 ```
-python3 manage.py makemigrations
 python3 manage.py migrate
 ```
 
