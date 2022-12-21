@@ -1,3 +1,4 @@
+from django.contrib.auth.tokens import default_token_generator
 from rest_framework import filters, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -7,11 +8,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.tokens import default_token_generator
+
 from .models import User
 from .permissions import AdminPermission
-from .utils import send_email
 from .serializers import UserSerializer, RegistrationSerializer
+from .utils import send_email
 
 
 class RegisterView(APIView):
@@ -53,7 +54,8 @@ class TokenView(APIView):
         user = get_object_or_404(User, username=request.data.get('username'))
         if (
             default_token_generator.check_token(
-                user, request.data.get('confirmation_code'))):
+                user, request.data.get('confirmation_code'))
+        ):
             response = {'token': self.get_token(user)}
             return Response(response, status=status.HTTP_200_OK)
         response = {'confirmation_code': 'Неверный код'}
@@ -68,7 +70,7 @@ class UsersViewSet(ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
     lookup_field = 'username'
-    http_method_names = ["patch", "get", "post", "delete"]
+    http_method_names = ['patch', 'get', 'post', 'delete']
 
     @action(detail=False, permission_classes=(IsAuthenticated,),
             methods=['get', 'patch'], url_path='me')

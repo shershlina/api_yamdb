@@ -1,5 +1,6 @@
-from csv import DictReader
 import os
+from csv import DictReader
+
 from django.core.management import BaseCommand
 
 from api_yamdb.settings import BASE_DIR
