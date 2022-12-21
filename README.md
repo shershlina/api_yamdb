@@ -5,6 +5,8 @@ Made a connection between frontend and backend of YaMDB
 ### How to launch the project:
 
 Clone the repository and open it through terminal.
+In some cases you need to use "python" instead of "python3".
+
 Create and activate virtual environment:
 
 ```
@@ -20,7 +22,7 @@ python3 -m venv env
 * If you have windows
 
     ```
-    source env/scripts/activate
+    source venv/scripts/activate
     ```
 
 ```
@@ -33,10 +35,23 @@ Install all requirements from requirements.txt file:
 pip install -r requirements.txt
 ```
 
+Change the directory:
+
+```
+cd ./api_yamdb/
+```
+
 Make migrations:
 
 ```
+python3 manage.py makemigrations
 python3 manage.py migrate
+```
+
+Fill the database with test data:
+
+```
+python3 manage.py import_csv
 ```
 
 Run the project:

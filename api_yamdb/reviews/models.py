@@ -24,10 +24,7 @@ class Title(models.Model):
     name = models.CharField(max_length=256)
     year = models.PositiveSmallIntegerField()
     description = models.TextField(null=True, blank=True)
-    genre = models.ManyToManyField(
-        Genre, through='GenresTitle',
-        related_name='titles'
-    )
+    genre = models.ManyToManyField(Genre, related_name='titles')
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL,
         related_name='titles', null=True
@@ -38,11 +35,6 @@ class Title(models.Model):
 
     class Meta:
         ordering = ['name']
-
-
-class GenresTitle(models.Model):
-    genre_id = models.ForeignKey(Genre, on_delete=models.CASCADE)
-    title_id = models.ForeignKey(Title, on_delete=models.CASCADE)
 
 
 class Review(models.Model):
