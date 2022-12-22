@@ -60,8 +60,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (
-        AdminOnly | ModeratorOnly | AuthorOnly | ReadOnly,)
+    permission_classes = (AdminOnly | ModeratorOnly | AuthorOnly | ReadOnly,)
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -76,8 +75,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = (
-        AdminOnly | ModeratorOnly | AuthorOnly | ReadOnly,)
+    permission_classes = (AdminOnly | ModeratorOnly | AuthorOnly | ReadOnly,)
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
