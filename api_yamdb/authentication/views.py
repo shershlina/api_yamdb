@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import serializers
 
 from .models import User
 from .permissions import AdminPermission
@@ -24,15 +25,20 @@ class RegisterView(APIView):
         serializer = RegistrationSerializer(data=request.data)
         username = request.data.get('username')
         email = request.data.get('email')
-        ur = User.objects.filter(
+        try:
+            serializer.is_valid(raise_exception=True)
+        except serializers.ValidationError as error:
+            user_error = error.detail.get('username')
+            email_error = error.detail.get('email')
+            if ((user_error is None
+                 or email_error is None) or (
+                    not (user_error[0].code == 'unique'
+                         and email_error[0].code == 'unique'))):
+                raise error
+        user, created = User.objects.get_or_create(
             username=username,
             email=email)
-        if ur.exists():
-            serializer.instance = ur[0]
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        send_email(email, default_token_generator.make_token(ur[0]
-                   or User.objects.get(username=username)))
+        send_email(email, default_token_generator.make_token(user))
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
