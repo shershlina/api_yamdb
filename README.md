@@ -45,10 +45,18 @@ python3 manage.py migrate
 ```
 
 Fill the database with test data:
-
-```
-python3 manage.py import_csv
-```
+* If you want to upload all the data:
+  ```
+  python3 manage.py import_csv
+  ```
+* If you want to upload files one by one:
+  Use optional arguments:
+  * model - name of the model for data
+  * app - app name the model belongs to
+  * file - name of the data file in data folder
+  ```
+  python3 manage.py import_csv -model [model] -app [app] -file [file]
+  ```
 
 Run the project:
 
