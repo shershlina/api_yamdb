@@ -1,13 +1,25 @@
 from rest_framework import serializers
 
 from .models import User, UserRole
+from .validators import ValidateUsername
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length=254, required=True)
+    username = serializers.CharField(max_length=150, required=True, validators=[ValidateUsername])
 
     class Meta:
         model = User
         fields = ('username', 'email',)
+
+    def validate(self, data):
+        username = User.objects.filter(username=data['username']).exists()
+        email = User.objects.filter(email=data['email']).exists()
+        if email and not username:
+            raise serializers.ValidationError('400')
+        if username and not email:
+            raise serializers.ValidationError('400')
+        return data
 
 
 class UserSerializer(serializers.ModelSerializer):

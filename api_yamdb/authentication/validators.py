@@ -1,14 +1,10 @@
 import re
 
-from django.utils.deconstruct import deconstructible
-from rest_framework import serializers
+from django.core.exceptions import ValidationError
 
-
-@deconstructible
-class ValidateUsername(object):
-    def __call__(self, value: str):
-        pattern = re.compile(r'^[\w.@+-]+\Z')
-        if value != 'me' and pattern.match(value):
-            return value
-        raise serializers.ValidationError(
-            'username должно соответствовать паттерну по документации')
+def ValidateUsername(value):
+    pattern = re.compile(r'^[\w.@+-]+\Z')
+    if value != 'me' and pattern.match(value):
+        return value
+    raise ValidationError(
+        'username должно соответствовать паттерну по документации')

@@ -3,7 +3,6 @@ from django.core.mail import send_mail
 
 
 def send_email(email, confirmation_code):
-    print(settings.DEFAULT_FROM_EMAIL)
     return send_mail(
         subject='Код подтверждения',
         message=('Регистрация прошла успешно! '
