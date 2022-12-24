@@ -162,6 +162,5 @@ SIMPLE_JWT = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
-DOMAIN_NAME = 'testemail@test.test'
 DOMAIN_NAME = '@test.test'
 DEFAULT_FROM_EMAIL = f'YMDB <test{DOMAIN_NAME}>'

@@ -7,12 +7,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 from .models import User
 from .permissions import AdminPermission
-from .serializers import UserSerializer, RegistrationSerializer
+from .serializers import UserSerializer, RegistrationSerializer, TokenSerializer
 from .utils import send_email
 
 
@@ -40,23 +39,16 @@ class TokenView(APIView):
         return str(refresh.access_token)
 
     def post(self, request):
-        if (
-            not request.data.get('confirmation_code')
-            or not request.data.get('username')
-        ):
-            response = {'confirmation_code': 'Обязательное поле',
-                        'username': 'Обязательное поле'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        user = get_object_or_404(User, username=request.data.get('username'))
-        if (
-            default_token_generator.check_token(
-                user, request.data.get('confirmation_code'))
-        ):
-            response = {'token': self.get_token(user)}
-            return Response(response, status=status.HTTP_200_OK)
-        response = {'confirmation_code': 'Неверный код'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
+        serializer = TokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        username = serializer.validated_data.get('username')
+        user = get_object_or_404(User, username=username)
+        confirmation_code = serializer.validated_data.get('confirmation_code')
+        if default_token_generator.check_token(user, confirmation_code):
+            token = AccessToken.for_user(user)
+            return Response({'token': str(token)}, status=status.HTTP_200_OK)
+        return Response({'confirmation_code': 'Неверный код подтверждения!'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 class UsersViewSet(ModelViewSet):
     serializer_class = UserSerializer
