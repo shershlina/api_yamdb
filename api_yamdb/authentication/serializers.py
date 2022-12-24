@@ -6,7 +6,8 @@ from .validators import validate_username
 
 class RegistrationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=254, required=True)
-    username = serializers.CharField(max_length=150, required=True, validators=[validate_username])
+    username = serializers.CharField(max_length=150, required=True,
+                                     validators=[validate_username])
 
     class Meta:
         model = User
