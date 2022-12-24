@@ -11,7 +11,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 from .models import User
 from .permissions import AdminPermission
-from .serializers import UserSerializer, RegistrationSerializer, TokenSerializer
+from .serializers import (UserSerializer, RegistrationSerializer,
+                          TokenSerializer)
 from .utils import send_email
 
 
@@ -49,6 +50,7 @@ class TokenView(APIView):
             return Response({'token': str(token)}, status=status.HTTP_200_OK)
         return Response({'confirmation_code': 'Неверный код подтверждения!'},
                         status=status.HTTP_400_BAD_REQUEST)
+
 
 class UsersViewSet(ModelViewSet):
     serializer_class = UserSerializer
