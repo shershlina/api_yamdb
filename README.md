@@ -2,6 +2,9 @@
 Final version of the API part for YaMDB
 Made a connection between frontend and backend of YaMDB
 
+## Technologies
+Django, Python, API
+
 ### How to launch the project:
 
 Clone the repository and open it through terminal.
@@ -64,3 +67,5 @@ Run the project:
 python3 manage.py runserver
 ```
 
+Authors of the project:
+Lina Ivanova, Vladimir Zheltuhov, Alexander Zvonaryov
