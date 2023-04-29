@@ -1,6 +1,6 @@
 # api_yamdb
-Final version of the API part for YaMDB
-Made a connection between frontend and backend of YaMDB
+Final version of the API part for YaMDB. Made a connection between frontend and backend of YaMDB  
+YaMDB - a social network in which users can post reviews of works in different categories (films, music, cinema) and genres, a rating of works is formed from the user ratings. The works themselves are not stored in YaMDb: you can't watch a movie or listen to music here.
 
 ## Technologies
 Django, Python, API
