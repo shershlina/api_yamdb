@@ -59,5 +59,5 @@ python3 manage.py runserver
 ```
 After thet you can find api examples and documentaion at http://127.0.0.1:8000/redoc/
 
-##Authors of the project:
+##Authors of the project:  
 Lina Ivanova, Vladimir Zheltuhov, Alexander Zvonaryov
